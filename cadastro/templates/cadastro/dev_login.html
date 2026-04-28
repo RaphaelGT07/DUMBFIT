@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Dev | DumbFit</title>
+  <style>
+    :root {
+      --bg-top: #081f14;
+      --bg-bottom: #020c08;
+      --surface: rgba(7, 24, 16, 0.84);
+      --surface-soft: rgba(255, 255, 255, 0.05);
+      --border: rgba(125, 238, 166, 0.16);
+      --text: #edf8ef;
+      --muted: #a8c7af;
+      --accent: #6fee9a;
+      --accent-strong: #28c865;
+      --danger: #ffb3b3;
+      --shadow: 0 24px 56px rgba(0, 0, 0, 0.32);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(111, 238, 154, 0.15), transparent 26%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+    }
+
+    .login-shell {
+      width: min(100%, 460px);
+      padding: 2rem;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-badge {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #042111;
+      box-shadow: 0 12px 28px rgba(40, 200, 101, 0.24);
+    }
+
+    h1 {
+      margin-bottom: 0.7rem;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 0.95;
+    }
+
+    .copy {
+      margin-bottom: 1.4rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .error-box {
+      margin-bottom: 1rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(255, 179, 179, 0.2);
+      border-radius: 18px;
+      background: rgba(255, 179, 179, 0.08);
+      color: var(--danger);
+    }
+
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.45rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus {
+      border-color: rgba(111, 238, 154, 0.4);
+    }
+
+    .submit-btn,
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      border-radius: 999px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      margin-top: 0.4rem;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #042111;
+      cursor: pointer;
+    }
+
+    .back-link {
+      width: 100%;
+      margin-top: 0.8rem;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <main class="login-shell">
+    <a class="brand" href="/">
+      <span class="brand-badge">DF</span>
+      <span>DumbFit Dev</span>
+    </a>
+
+    <h1>Acesso do time dev</h1>
+    <p class="copy">Entre com seu usuario e senha para abrir o dashboard interno com clientes, cadastros e historico de acessos.</p>
+
+    {% if error_message %}
+      <div class="error-box">{{ error_message }}</div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="field">
+        <label for="username">Usuario</label>
+        <input id="username" name="username" type="text" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label for="password">Senha</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required />
+      </div>
+      <button class="submit-btn" type="submit">Entrar no dashboard</button>
+    </form>
+
+    <a class="back-link" href="/">Voltar ao site</a>
+  </main>
+</body>
+</html>

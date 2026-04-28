@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil do Usuario | DumbFit</title>
+  <style>
+    :root {
+      --bg: #f6efe2;
+      --bg-soft: #fffaf1;
+      --panel: rgba(255, 250, 241, 0.82);
+      --panel-strong: rgba(255, 255, 255, 0.92);
+      --text: #23180f;
+      --muted: #725d49;
+      --line: rgba(71, 49, 31, 0.14);
+      --accent: #e86f2d;
+      --accent-strong: #bf4d16;
+      --accent-soft: #ffd6bf;
+      --success: #2f9e62;
+      --shadow: 0 24px 60px rgba(105, 66, 28, 0.18);
+      --max-width: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(232, 111, 45, 0.18), transparent 30%),
+        radial-gradient(circle at right 18%, rgba(255, 214, 191, 0.8), transparent 22%),
+        linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 54%, #efe3ce 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      width: min(100% - 2rem, var(--max-width));
+      margin: 0 auto;
+      padding: 1.5rem 0 3rem;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: white;
+      box-shadow: 0 12px 30px rgba(191, 77, 22, 0.28);
+    }
+
+    .topbar-link {
+      padding: 0.85rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      font-weight: 700;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .topbar-link:hover {
+      transform: translateY(-2px);
+      border-color: rgba(232, 111, 45, 0.35);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .profile-card,
+    .summary-card,
+    .steps-card,
+    .support-card {
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      padding: 2.3rem;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -60px -80px auto;
+      width: 210px;
+      height: 210px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(232, 111, 45, 0.22), transparent 70%);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.1rem;
+      padding: 0.5rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(47, 158, 98, 0.14);
+      color: var(--success);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 1rem;
+      font-size: clamp(2.4rem, 6vw, 4.7rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy {
+      max-width: 58ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.8rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 1.3rem;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: white;
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+    }
+
+    .summary-card {
+      padding: 2rem;
+    }
+
+    .profile-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.15rem;
+      align-items: center;
+      margin-top: 1.5rem;
+      padding: 1.6rem 1.8rem;
+    }
+
+    .profile-avatar {
+      width: 86px;
+      height: 86px;
+      display: grid;
+      place-items: center;
+      border-radius: 28px;
+      background: linear-gradient(135deg, var(--accent), #ff9a5c);
+      color: white;
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      box-shadow: 0 14px 34px rgba(191, 77, 22, 0.24);
+    }
+
+    .profile-copy small {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .profile-copy h2 {
+      margin-bottom: 0.35rem;
+      font-size: 1.5rem;
+    }
+
+    .profile-copy p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .summary-title {
+      margin-bottom: 1.3rem;
+      font-size: 1.25rem;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .summary-item {
+      padding: 1rem 1rem 1.05rem;
+      border: 1px solid rgba(71, 49, 31, 0.08);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.66);
+    }
+
+    .summary-label {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .summary-value {
+      font-size: 1rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .steps-card,
+    .support-card {
+      padding: 2rem;
+    }
+
+    .section-title {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .step-list,
+    .support-list {
+      display: grid;
+      gap: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .step,
+    .support-item {
+      padding: 1rem 1rem 1rem 1.1rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    .step strong,
+    .support-item strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .topbar-link {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        width: min(100% - 1rem, var(--max-width));
+        padding-top: 0.8rem;
+      }
+
+      .hero-card,
+      .summary-card,
+      .steps-card,
+      .support-card {
+        border-radius: 24px;
+      }
+
+      .hero-card,
+      .summary-card,
+      .steps-card,
+      .support-card {
+        padding: 1.35rem;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="/">
+        <span class="brand-mark">DF</span>
+        <span>DumbFit</span>
+      </a>
+      <a class="topbar-link" href="/">Voltar para o site</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <article class="hero-card">
+          <span class="kicker">Perfil liberado</span>
+          <h1>Seu perfil DumbFit ja esta pronto.</h1>
+          <p class="hero-copy">
+            {{ primeiro_nome }}, seu cadastro foi salvo com sucesso e agora esta organizado em uma area de perfil para facilitar o atendimento da equipe e a sua visualizacao dos dados enviados.
+          </p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="/#planos">Ver planos</a>
+            <a class="btn-secondary" href="/#contato">Falar com a equipe</a>
+          </div>
+        </article>
+
+        <aside class="summary-card">
+          <h2 class="summary-title">Perfil do usuario</h2>
+          <div class="summary-list">
+            <div class="summary-item">
+              <span class="summary-label">Nome</span>
+              <div class="summary-value">{{ registro.nome }}</div>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">E-mail</span>
+              <div class="summary-value">{{ registro.email }}</div>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Telefone</span>
+              <div class="summary-value">{{ registro.telefone }}</div>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Status</span>
+              <div class="summary-value">Cadastro concluido</div>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Perfil</span>
+              <div class="summary-value">Aluno em analise</div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="profile-card">
+        <div class="profile-avatar">{{ iniciais }}</div>
+        <div class="profile-copy">
+          <small>Usuario cadastrado</small>
+          <h2>{{ registro.nome }}</h2>
+          <p>
+            Conta criada para acompanhamento inicial na DumbFit. Os dados abaixo podem ser usados pela equipe para identificar seu atendimento e dar sequencia ao seu processo.
+          </p>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <article class="steps-card">
+          <h2 class="section-title">O que acontece agora</h2>
+          <div class="step-list">
+            <div class="step">
+              <strong>1. Confirmacao interna</strong>
+              Seu cadastro fica registrado no sistema da academia assim que a tela de conclusao abre.
+            </div>
+            <div class="step">
+              <strong>2. Contato da equipe</strong>
+              Usaremos o telefone ou o e-mail informado para alinhar horario, plano e inicio das atividades.
+            </div>
+            <div class="step">
+              <strong>3. Proximo passo presencial</strong>
+              Se quiser acelerar o processo, voce pode voltar ao site e usar a area de contato para falar com a unidade.
+            </div>
+          </div>
+        </article>
+
+        <article class="support-card">
+          <h2 class="section-title">Antes da sua primeira visita</h2>
+          <div class="support-list">
+            <div class="support-item">
+              <strong>Leve um documento com foto</strong>
+              Isso ajuda a equipe a localizar rapidamente o seu cadastro ao chegar na academia.
+            </div>
+            <div class="support-item">
+              <strong>Defina seu objetivo</strong>
+              Ganho de massa, emagrecimento ou condicionamento: esse contexto agiliza seu atendimento.
+            </div>
+            <div class="support-item">
+              <strong>Salve nossos canais</strong>
+              Caso precise ajustar o atendimento, volte ao site e use a secao de contato.
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
