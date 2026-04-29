@@ -5,10 +5,17 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import urlencode
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from .models import Avaliacao, Cadastro, Cliente
 
 User = get_user_model()
+
+PLANOS_DISPONIVEIS = {
+    "basico": "Basico",
+    "completo": "Completo",
+    "vip": "VIP",
+}
 
 
 def criar_avaliacoes_iniciais(cliente):
@@ -74,6 +81,7 @@ def index(request):
             telefone=telefone,
             tipo=tipo,
         )
+        request.session["cliente_id"] = cliente.id
         success_message = (
             f"Login enviado com sucesso, {nome}. Em breve entraremos em contato."
             if tipo == "login"
@@ -83,7 +91,7 @@ def index(request):
         if is_ajax:
             payload = {"ok": True, "message": success_message, "tipo": tipo, "nome": nome}
             if tipo == "login":
-                query = urlencode({"id": cliente.id})
+                query = urlencode({"id": cliente.id, "nome": cliente.nome, "email": cliente.email, "telefone": cliente.telefone})
                 payload["redirect_url"] = f"/perfil/?{query}"
             if tipo == "cadastro":
                 query = urlencode({"id": cliente.id})
@@ -91,7 +99,7 @@ def index(request):
             return JsonResponse(payload)
 
         if tipo == "login":
-            query = urlencode({"id": cliente.id})
+            query = urlencode({"id": cliente.id, "nome": cliente.nome, "email": cliente.email, "telefone": cliente.telefone})
             return redirect(f"/perfil/?{query}")
 
         if tipo == "cadastro":
@@ -120,19 +128,40 @@ def cadastro_concluido(request):
 
 
 def perfil_cliente(request):
-    cliente_id = request.GET.get("id", "").strip()
+    cliente_id = request.GET.get("id", "").strip() or request.session.get("cliente_id")
     if not cliente_id:
         raise Http404("Perfil nao encontrado.")
 
     cliente = get_object_or_404(Cliente, id=cliente_id)
+    request.session["cliente_id"] = cliente.id
+    plano_assinado = request.GET.get("assinatura", "").strip() or request.session.get("plano_assinado", "")
     primeiro_nome = cliente.nome.split()[0] if cliente.nome else "Cliente"
     context = {
         "registro": cliente,
         "primeiro_nome": primeiro_nome,
         "iniciais": "".join(parte[0] for parte in cliente.nome.split()[:2]).upper() if cliente.nome else "DF",
         "avaliacoes": cliente.avaliacoes.all(),
+        "plano_assinado": PLANOS_DISPONIVEIS.get(plano_assinado, ""),
     }
     return render(request, "cadastro/perfil_cliente.html", context)
+
+
+@require_POST
+def assinar_plano(request):
+    cliente_id = request.POST.get("cliente_id", "").strip() or request.session.get("cliente_id")
+    if not cliente_id:
+        raise Http404("Perfil nao encontrado.")
+
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    plano = request.POST.get("plano", "").strip()
+    if plano not in PLANOS_DISPONIVEIS:
+        query = urlencode({"id": cliente.id})
+        return redirect(f"/perfil/?{query}")
+
+    request.session["cliente_id"] = cliente.id
+    request.session["plano_assinado"] = plano
+    query = urlencode({"id": cliente.id, "assinatura": plano})
+    return redirect(f"/perfil/?{query}#planos-disponiveis")
 
 
 def dev_login(request):

@@ -165,6 +165,63 @@ class CadastroFlowTests(TestCase):
         self.assertContains(response, "Raphael Tuller")
         self.assertContains(response, "Avaliacoes do cliente")
         self.assertContains(response, "Avaliacao fisica")
+        self.assertNotContains(response, "Cliente DumbFit")
+
+    def test_profile_page_can_use_logged_client_from_session(self):
+        cliente = Cliente.objects.create(
+            nome="Raphael Tuller",
+            email="raphael@example.com",
+            telefone="(21) 99999-0000",
+        )
+        session = self.client.session
+        session["cliente_id"] = cliente.id
+        session.save()
+
+        response = self.client.get(reverse("perfil_cliente"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Raphael Tuller")
+        self.assertContains(response, "Bem-vindo de volta")
+
+    def test_profile_page_renders_available_plans_after_login(self):
+        cliente = Cliente.objects.create(
+            nome="Raphael Tuller",
+            email="raphael@example.com",
+            telefone="(21) 99999-0000",
+        )
+
+        response = self.client.get(reverse("perfil_cliente"), {"id": cliente.id})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Planos disponiveis")
+        self.assertContains(response, "Basico")
+        self.assertContains(response, "Completo")
+        self.assertContains(response, "VIP")
+        self.assertContains(response, "Assinar plano", count=3)
+        self.assertContains(response, '<img class="plan-image"', count=3)
+
+    def test_logged_client_can_subscribe_plan_without_leaving_profile(self):
+        cliente = Cliente.objects.create(
+            nome="Raphael Tuller",
+            email="raphael@example.com",
+            telefone="(21) 99999-0000",
+        )
+        session = self.client.session
+        session["cliente_id"] = cliente.id
+        session.save()
+
+        response = self.client.post(
+            reverse("assinar_plano"),
+            {"cliente_id": cliente.id, "plano": "completo"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse("perfil_cliente")))
+        self.assertIn("assinatura=completo", response.url)
+
+        confirmation = self.client.get(response.url)
+        self.assertContains(confirmation, "Plano Completo selecionado")
+        self.assertContains(confirmation, "Raphael Tuller")
 
     def test_ajax_cadastro_returns_redirect_url(self):
         response = self.client.post(

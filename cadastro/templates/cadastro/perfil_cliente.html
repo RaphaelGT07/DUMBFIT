@@ -109,6 +109,7 @@
 
     .profile-chip strong {
       font-size: 0.95rem;
+      overflow-wrap: anywhere;
     }
 
     .profile-chip small {
@@ -120,9 +121,10 @@
 
     .hero {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
       gap: 1.5rem;
       margin-top: 1.5rem;
+      align-items: stretch;
     }
 
     .card {
@@ -134,11 +136,17 @@
     }
 
     .hero-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 420px;
       padding: 2.2rem;
     }
 
     .eyebrow {
       display: inline-flex;
+      width: fit-content;
+      align-self: flex-start;
       align-items: center;
       gap: 0.45rem;
       margin-bottom: 1rem;
@@ -153,11 +161,12 @@
     }
 
     h1 {
-      max-width: 11ch;
+      max-width: 13ch;
       margin-bottom: 1rem;
-      font-size: clamp(2.5rem, 6vw, 4.8rem);
-      line-height: 0.95;
-      letter-spacing: -0.05em;
+      font-size: clamp(2.35rem, 4.8vw, 4rem);
+      line-height: 1;
+      letter-spacing: 0;
+      overflow-wrap: break-word;
     }
 
     .hero-copy {
@@ -198,22 +207,27 @@
     .profile-card {
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: 1rem;
+      gap: 1.15rem;
       align-items: center;
+      min-height: 420px;
       padding: 1.8rem;
     }
 
     .avatar {
-      width: 88px;
-      height: 88px;
+      width: 82px;
+      height: 82px;
       display: grid;
       place-items: center;
       border-radius: 28px;
       background: linear-gradient(135deg, var(--accent), var(--accent-strong));
       color: #042111;
-      font-size: 1.85rem;
+      overflow: hidden;
+      text-align: center;
+      font-size: clamp(1.15rem, 3vw, 1.65rem);
       font-weight: 900;
-      letter-spacing: 0.08em;
+      letter-spacing: 0;
+      line-height: 1;
+      word-break: break-word;
     }
 
     .profile-meta small,
@@ -228,6 +242,7 @@
     .profile-meta h2 {
       margin: 0.35rem 0;
       font-size: 1.55rem;
+      overflow-wrap: break-word;
     }
 
     .profile-meta p {
@@ -242,14 +257,138 @@
       margin-top: 1.5rem;
     }
 
+    .plans-card,
     .info-card,
     .reviews-card {
       padding: 1.8rem;
     }
 
+    .plans-card {
+      margin-top: 1.5rem;
+    }
+
     .section-title {
       margin-bottom: 1rem;
       font-size: 1.25rem;
+    }
+
+    .section-copy {
+      max-width: 68ch;
+      margin: -0.35rem 0 1.2rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .plan-item {
+      position: relative;
+      display: grid;
+      gap: 0.9rem;
+      padding: 1.15rem;
+      border-radius: 24px;
+      border: 1px solid rgba(167, 246, 190, 0.12);
+      background: var(--surface-soft);
+      overflow: hidden;
+    }
+
+    .plan-image {
+      width: calc(100% + 2.3rem);
+      height: 140px;
+      margin: -1.15rem -1.15rem 0;
+      object-fit: cover;
+      border-bottom: 1px solid rgba(167, 246, 190, 0.12);
+      filter: saturate(0.95) contrast(1.08);
+    }
+
+    .plan-item.featured {
+      border-color: rgba(118, 239, 154, 0.38);
+      background: rgba(118, 239, 154, 0.1);
+    }
+
+    .plan-badge {
+      width: fit-content;
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(247, 185, 85, 0.14);
+      color: var(--warning);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .plan-name {
+      font-size: 1.15rem;
+      font-weight: 900;
+    }
+
+    .plan-price {
+      color: var(--accent);
+      font-size: 2rem;
+      font-weight: 900;
+    }
+
+    .plan-price span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .plan-features {
+      display: grid;
+      gap: 0.55rem;
+      color: var(--muted);
+      line-height: 1.45;
+      list-style: none;
+    }
+
+    .plan-subscribe {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 44px;
+      margin-top: auto;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #042111;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 900;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .plan-subscribe:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(35, 197, 94, 0.22);
+    }
+
+    .subscription-alert {
+      margin: 1rem 0 0;
+      padding: 1rem 1.05rem;
+      border-radius: 20px;
+      border: 1px solid rgba(118, 239, 154, 0.28);
+      background: rgba(118, 239, 154, 0.1);
+      color: #dff8e4;
+      line-height: 1.6;
+    }
+
+    .plan-features li::before {
+      content: "✓";
+      margin-right: 0.45rem;
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .plan-item form {
+      margin-top: auto;
     }
 
     .info-list,
@@ -297,8 +436,18 @@
       line-height: 1.65;
     }
 
+    .empty-state {
+      padding: 1rem 1.05rem;
+      border-radius: 22px;
+      border: 1px solid rgba(167, 246, 190, 0.1);
+      background: var(--surface-soft);
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
     @media (max-width: 920px) {
       .hero,
+      .plans-grid,
       .grid {
         grid-template-columns: 1fr;
       }
@@ -309,7 +458,7 @@
       }
     }
 
-    @media (max-width: 640px) {
+      @media (max-width: 640px) {
       .shell {
         width: min(100% - 1rem, var(--max-width));
         padding-top: 0.8rem;
@@ -321,13 +470,19 @@
 
       .hero-card,
       .profile-card,
+      .plans-card,
       .info-card,
       .reviews-card {
         padding: 1.35rem;
       }
 
+      .hero-card {
+        min-height: auto;
+      }
+
       .profile-card {
         grid-template-columns: 1fr;
+        min-height: auto;
       }
 
       .hero-actions {
@@ -352,7 +507,7 @@
         </div>
         <span>
           <small>Perfil ativo</small>
-          <strong>{{ registro.nome }}</strong>
+          <strong data-profile-field="nome">{{ registro.nome }}</strong>
         </span>
       </div>
     </header>
@@ -361,7 +516,7 @@
       <section class="hero">
         <article class="card hero-card">
           <span class="eyebrow">Login confirmado</span>
-          <h1>Bem-vindo de volta, {{ primeiro_nome }}.</h1>
+          <h1>Bem-vindo de volta, <span data-profile-field="primeiro_nome">{{ primeiro_nome }}</span>.</h1>
           <p class="hero-copy">
             Seu acesso foi reconhecido. Aqui estao o perfil do cliente e as avaliacoes que ajudam a equipe DumbFit a personalizar seu acompanhamento.
           </p>
@@ -372,15 +527,81 @@
         </article>
 
         <aside class="card profile-card">
-          <div class="avatar">{{ iniciais }}</div>
+          <div class="avatar" data-profile-field="iniciais">{{ iniciais }}</div>
           <div class="profile-meta">
             <small>Perfil do cliente</small>
-            <h2>{{ registro.nome }}</h2>
+            <h2 data-profile-field="nome">{{ registro.nome }}</h2>
             <p>
               Cliente identificado com sucesso para acompanhamento inicial. Seus dados permanecem vinculados a este perfil de acesso.
             </p>
           </div>
         </aside>
+      </section>
+
+      <section class="card plans-card" id="planos-disponiveis">
+        <h2 class="section-title">Planos disponiveis</h2>
+        <p class="section-copy">
+          Escolha o plano que combina melhor com sua rotina. A equipe DumbFit pode confirmar a melhor opcao durante o atendimento.
+        </p>
+        {% if plano_assinado %}
+          <div class="subscription-alert">
+            Plano {{ plano_assinado }} selecionado para {{ registro.nome }}. A equipe DumbFit ja pode continuar seu atendimento sem refazer cadastro.
+          </div>
+        {% endif %}
+
+        <div class="plans-grid">
+          <article class="plan-item">
+            <img class="plan-image" src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Equipamentos de musculacao em academia" loading="lazy" />
+            <div class="plan-name">Basico</div>
+            <div class="plan-price">R$ 89<span>/mes</span></div>
+            <ul class="plan-features">
+              <li>Musculacao livre</li>
+              <li>Vestiario completo</li>
+              <li>Avaliacao inicial</li>
+            </ul>
+            <form method="post" action="{% url 'assinar_plano' %}">
+              {% csrf_token %}
+              <input name="cliente_id" type="hidden" value="{{ registro.id }}" />
+              <input name="plano" type="hidden" value="basico" />
+              <button class="plan-subscribe" type="submit">Assinar plano</button>
+            </form>
+          </article>
+
+          <article class="plan-item featured">
+            <img class="plan-image" src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Pessoa treinando em academia" loading="lazy" />
+            <div class="plan-badge">Mais popular</div>
+            <div class="plan-name">Completo</div>
+            <div class="plan-price">R$ 139<span>/mes</span></div>
+            <ul class="plan-features">
+              <li>Tudo do basico</li>
+              <li>Todas as aulas coletivas</li>
+              <li>Personal mensal</li>
+            </ul>
+            <form method="post" action="{% url 'assinar_plano' %}">
+              {% csrf_token %}
+              <input name="cliente_id" type="hidden" value="{{ registro.id }}" />
+              <input name="plano" type="hidden" value="completo" />
+              <button class="plan-subscribe" type="submit">Assinar plano</button>
+            </form>
+          </article>
+
+          <article class="plan-item">
+            <img class="plan-image" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Treino acompanhado com personal trainer" loading="lazy" />
+            <div class="plan-name">VIP</div>
+            <div class="plan-price">R$ 219<span>/mes</span></div>
+            <ul class="plan-features">
+              <li>Tudo do completo</li>
+              <li>Personal semanal</li>
+              <li>Consulta com nutricionista</li>
+            </ul>
+            <form method="post" action="{% url 'assinar_plano' %}">
+              {% csrf_token %}
+              <input name="cliente_id" type="hidden" value="{{ registro.id }}" />
+              <input name="plano" type="hidden" value="vip" />
+              <button class="plan-subscribe" type="submit">Assinar plano</button>
+            </form>
+          </article>
+        </div>
       </section>
 
       <section class="grid">
@@ -389,15 +610,15 @@
           <div class="info-list">
             <div class="info-item">
               <div class="info-label">Nome completo</div>
-              <div class="info-value">{{ registro.nome }}</div>
+              <div class="info-value" data-profile-field="nome">{{ registro.nome }}</div>
             </div>
             <div class="info-item">
               <div class="info-label">E-mail</div>
-              <div class="info-value">{{ registro.email }}</div>
+              <div class="info-value" data-profile-field="email">{{ registro.email }}</div>
             </div>
             <div class="info-item">
               <div class="info-label">Telefone</div>
-              <div class="info-value">{{ registro.telefone }}</div>
+              <div class="info-value" data-profile-field="telefone">{{ registro.telefone }}</div>
             </div>
             <div class="info-item">
               <div class="info-label">Status da conta</div>
@@ -423,5 +644,76 @@
       </section>
     </main>
   </div>
+  <script>
+    function getStoredProfile() {
+      try {
+        return JSON.parse(localStorage.getItem("dumbfitLoggedUser") || "{}");
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function getFallbackProfile() {
+      const params = new URLSearchParams(window.location.search);
+      const stored = getStoredProfile();
+      const nome = params.get("nome") || stored.nome || "Aluno DumbFit";
+      const partesNome = nome.trim().split(/\s+/).filter(Boolean);
+
+      return {
+        nome,
+        primeiro_nome: partesNome[0] || "Aluno",
+        iniciais: partesNome.slice(0, 2).map((parte) => parte[0]).join("").toUpperCase() || "DF",
+        email: params.get("email") || stored.email || "email nao informado",
+        telefone: params.get("telefone") || stored.telefone || "telefone nao informado"
+      };
+    }
+
+    function replaceTemplateText(node, values) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        let text = node.textContent;
+        Object.entries(values).forEach(([templateValue, fallback]) => {
+          text = text.split(templateValue).join(fallback);
+        });
+        node.textContent = text;
+        return;
+      }
+
+      node.childNodes.forEach((child) => replaceTemplateText(child, values));
+    }
+
+    function applyDirectOpenFallback() {
+      const bodyText = document.body.textContent;
+      const hasRawTemplate = bodyText.includes("{{ registro.nome }}") || bodyText.includes("{% for avaliacao");
+
+      if (!hasRawTemplate) {
+        return;
+      }
+
+      const profile = getFallbackProfile();
+      const values = {
+        "{{ primeiro_nome }}": profile.primeiro_nome,
+        "{{ iniciais }}": profile.iniciais,
+        "{{ registro.nome }}": profile.nome,
+        "{{ registro.email }}": profile.email,
+        "{{ registro.telefone }}": profile.telefone
+      };
+
+      replaceTemplateText(document.body, values);
+
+      document.querySelectorAll("[data-profile-field]").forEach((element) => {
+        const field = element.dataset.profileField;
+        if (profile[field]) {
+          element.textContent = profile[field];
+        }
+      });
+
+      const reviewList = document.querySelector(".review-list");
+      if (reviewList && reviewList.textContent.includes("{%")) {
+        reviewList.innerHTML = '<div class="empty-state">As avaliacoes reais aparecem aqui quando voce acessa pelo login do sistema.</div>';
+      }
+    }
+
+    applyDirectOpenFallback();
+  </script>
 </body>
 </html>

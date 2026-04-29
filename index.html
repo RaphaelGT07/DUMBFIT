@@ -185,6 +185,12 @@
       background: rgba(255, 255, 255, 0.04);
     }
 
+    .nav-action.support {
+      color: #dff8e4;
+      border: 1px solid rgba(84, 217, 110, 0.26);
+      background: rgba(84, 217, 110, 0.1);
+    }
+
     .nav-action.signup {
       color: #05260b;
       background: linear-gradient(135deg, var(--accent), var(--accent-strong));
@@ -530,6 +536,21 @@
       padding: 1.4rem;
     }
 
+    .plano {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .plano-imagem {
+      width: calc(100% + 2.8rem);
+      height: 150px;
+      margin: -1.4rem -1.4rem 1.2rem;
+      object-fit: cover;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      filter: saturate(0.95) contrast(1.08);
+    }
+
     .plano.destaque {
       background: linear-gradient(180deg, rgba(10, 49, 18, 0.98), rgba(5, 27, 10, 0.98));
       border-color: rgba(84, 217, 110, 0.5);
@@ -537,6 +558,7 @@
 
     .plano-badge {
       display: inline-block;
+      width: fit-content;
       margin-bottom: 0.75rem;
       padding: 0.35rem 0.7rem;
       border-radius: 999px;
@@ -574,12 +596,35 @@
       color: var(--muted);
       font-size: 0.95rem;
       line-height: 1.5;
+      margin-bottom: 1.25rem;
     }
 
     .plano li::before {
       content: "\2713  ";
       color: var(--accent);
       font-weight: 800;
+    }
+
+    .plano-assinar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 46px;
+      margin-top: auto;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #041108;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .plano-assinar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(31, 212, 87, 0.22);
     }
 
     .horarios {
@@ -658,6 +703,27 @@
       color: var(--text);
       padding: 0.95rem 1rem;
       font-size: 0.95rem;
+    }
+
+    select {
+      appearance: none;
+      background:
+        linear-gradient(45deg, transparent 50%, var(--accent) 50%) calc(100% - 22px) 50% / 7px 7px no-repeat,
+        linear-gradient(135deg, var(--accent) 50%, transparent 50%) calc(100% - 17px) 50% / 7px 7px no-repeat,
+        rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      cursor: pointer;
+      padding-right: 2.75rem;
+    }
+
+    select option {
+      background: #061b0d;
+      color: var(--text);
+    }
+
+    select option:checked {
+      background: #143f22;
+      color: #dff8e4;
     }
 
     input:focus,
@@ -750,7 +816,7 @@
 
       .nav-actions {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr;
         width: 100%;
       }
 
@@ -829,6 +895,7 @@
         <a href="#contato">Contato</a>
       </nav>
       <div class="nav-actions" aria-label="Acesso de usu&aacute;rio">
+        <a class="nav-action support" href="#contato">Suporte planos</a>
         <button class="nav-action login" type="button" data-open-modal="login">Login</button>
         <button class="nav-action signup" type="button" data-open-modal="cadastro">Cadastro</button>
       </div>
@@ -898,6 +965,7 @@
         <p class="section-intro">As categorias agora est&atilde;o separadas visualmente para o visitante entender r&aacute;pido onde clicar, enquanto os cards se reorganizam sozinhos em telas menores.</p>
         <div class="planos-grid">
           <article class="plano">
+            <img class="plano-imagem" src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Equipamentos de musculacao em academia" loading="lazy" />
             <div class="plano-nome">B&aacute;sico</div>
             <div class="plano-preco">R$ 89<span>/m&ecirc;s</span></div>
             <ul>
@@ -905,9 +973,11 @@
               <li>Vesti&aacute;rio completo</li>
               <li>Avalia&ccedil;&atilde;o inicial</li>
             </ul>
+            <button class="plano-assinar" type="button" data-open-modal="cadastro">Assinar plano</button>
           </article>
 
           <article class="plano destaque">
+            <img class="plano-imagem" src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Pessoa treinando em academia" loading="lazy" />
             <div class="plano-badge">Mais popular</div>
             <div class="plano-nome">Completo</div>
             <div class="plano-preco">R$ 139<span>/m&ecirc;s</span></div>
@@ -916,9 +986,11 @@
               <li>Todas as aulas coletivas</li>
               <li>Personal mensal</li>
             </ul>
+            <button class="plano-assinar" type="button" data-open-modal="cadastro">Assinar plano</button>
           </article>
 
           <article class="plano">
+            <img class="plano-imagem" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Treino acompanhado com personal trainer" loading="lazy" />
             <div class="plano-nome">VIP</div>
             <div class="plano-preco">R$ 219<span>/m&ecirc;s</span></div>
             <ul>
@@ -926,6 +998,7 @@
               <li>Personal semanal</li>
               <li>Consulta com nutricionista</li>
             </ul>
+            <button class="plano-assinar" type="button" data-open-modal="cadastro">Assinar plano</button>
           </article>
         </div>
       </div>
@@ -1178,6 +1251,11 @@
         }
 
         if (data.redirect_url) {
+          localStorage.setItem("dumbfitLoggedUser", JSON.stringify({
+            nome: formData.get("nome") || "",
+            email: formData.get("email") || "",
+            telefone: formData.get("telefone") || ""
+          }));
           window.location.href = data.redirect_url;
           return;
         }
