@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerenciar Usuarios | DumbFit</title>
+  <style>
+    :root {
+      --bg-top: #123f22;
+      --bg-bottom: #041108;
+      --surface: rgba(8, 22, 13, 0.88);
+      --surface-soft: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f4f8f4;
+      --muted: #afbeaf;
+      --accent: #54d96e;
+      --accent-strong: #1fd457;
+      --warning: #ffd79a;
+      --danger: #ffb0b0;
+      --shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+      --content-width: 1240px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(84, 217, 110, 0.18), transparent 26%),
+        linear-gradient(180deg, var(--bg-top) 0%, #071b0e 40%, var(--bg-bottom) 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .shell { width: min(100% - 2rem, var(--content-width)); margin: 0 auto; }
+    .topbar { padding: 1.2rem 0; }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: rgba(4, 17, 8, 0.74);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-badge {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #05260b;
+      font-size: 1rem;
+      box-shadow: 0 12px 24px rgba(31, 212, 87, 0.22);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .pill,
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      font-weight: 700;
+    }
+
+    .pill { color: var(--muted); }
+    .hero { padding: 1rem 0 1.5rem; }
+    .card { border: 1px solid var(--border); border-radius: 28px; background: var(--surface); box-shadow: var(--shadow); }
+    .hero-card { padding: 2rem; }
+    .eyebrow { display: inline-block; margin-bottom: 0.8rem; color: #9ef4b0; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    h1 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 0.9rem; }
+    .hero-copy { max-width: 68ch; color: var(--muted); line-height: 1.75; margin-bottom: 1.5rem; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .stat-card {
+      padding: 1.2rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .stat-label { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 0.45rem; }
+    .stat-value { font-size: 2rem; font-weight: 800; color: var(--accent); }
+
+    .status-box {
+      margin: 0 0 1.2rem;
+      padding: 0.95rem 1.1rem;
+      border-radius: 18px;
+      border: 1px solid rgba(84, 217, 110, 0.24);
+      background: rgba(84, 217, 110, 0.1);
+      color: #dff8e4;
+    }
+
+    .status-box.warning {
+      border-color: rgba(255, 215, 154, 0.3);
+      background: rgba(255, 179, 71, 0.12);
+      color: var(--warning);
+    }
+
+    .status-box.danger {
+      border-color: rgba(255, 176, 176, 0.3);
+      background: rgba(255, 89, 89, 0.12);
+      color: var(--danger);
+    }
+
+    .status-box[hidden] { display: none; }
+    .table-card { overflow: hidden; }
+    .table-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.4rem 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    .table-title { font-size: 1.35rem; margin-bottom: 0.25rem; }
+    .table-subtitle { color: var(--muted); font-size: 0.95rem; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1080px; }
+    th, td { padding: 1rem 1.2rem; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.06); vertical-align: top; }
+    th { color: #d7ead9; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(255, 255, 255, 0.02); }
+    .muted { color: var(--muted); }
+
+    .type-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.42rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid rgba(84, 217, 110, 0.2);
+      background: rgba(84, 217, 110, 0.12);
+      color: #dff8e4;
+      margin-right: 0.35rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .type-pill.warning { border-color: rgba(255, 215, 154, 0.25); background: rgba(255, 179, 71, 0.12); color: var(--warning); }
+    .type-pill.danger { border-color: rgba(255, 176, 176, 0.25); background: rgba(255, 89, 89, 0.12); color: var(--danger); }
+
+    .actions { display: grid; gap: 0.55rem; }
+    .action-btn {
+      width: 100%;
+      min-height: 38px;
+      padding: 0.6rem 0.8rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .action-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-strong)); color: #05260b; border: none; }
+    .action-btn.warning { color: var(--warning); }
+    .action-btn.danger { color: var(--danger); }
+    .empty-row { text-align: center; color: var(--muted); padding: 2rem 1.2rem; }
+
+    @media (max-width: 900px) {
+      .topbar-inner { flex-direction: column; align-items: flex-start; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-card { padding: 1.4rem; }
+    }
+
+    @media (max-width: 640px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="/painel-admin/usuarios/">
+        <span class="brand-badge">DF</span>
+        <span>DumbFit Admin</span>
+      </a>
+      <div class="topbar-actions">
+        <span class="pill" id="current-user">Logado como ...</span>
+        <a class="nav-link" href="/admin/">Abrir admin Django</a>
+        <a class="nav-link" href="/">Voltar ao site</a>
+        <a class="nav-link" href="/dev-logout/">Sair</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="card hero-card">
+        <span class="eyebrow">Gestao de Usuarios</span>
+        <h1>Area administrativa dos usuarios do Django</h1>
+        <p class="hero-copy">Depois do login administrativo, esta area permite que a equipe gerencie as contas do sistema sem sobrepor o site publico. Voce pode revisar usuarios, ativar ou desativar contas e controlar quem tem acesso ao painel.</p>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span class="stat-label">Total de usuarios</span>
+            <strong class="stat-value" id="stat-total">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Usuarios ativos</span>
+            <strong class="stat-value" id="stat-active">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Usuarios staff</span>
+            <strong class="stat-value" id="stat-staff">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Superusuarios</span>
+            <strong class="stat-value" id="stat-superuser">0</strong>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="status-box" id="status-box" hidden></div>
+
+    <section>
+      <div class="card table-card">
+        <div class="table-header">
+          <div>
+            <h2 class="table-title">Usuarios autenticados</h2>
+            <p class="table-subtitle">Gerencie aqui as contas do Django que podem acessar o sistema e o painel administrativo.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Permissoes</th>
+                <th>Ultimo login</th>
+                <th>Acoes</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body">
+              <tr><td class="empty-row" colspan="6">Carregando usuarios...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const currentUser = document.getElementById("current-user");
+    const statusBox = document.getElementById("status-box");
+    const usersTableBody = document.getElementById("users-table-body");
+    const statTotal = document.getElementById("stat-total");
+    const statActive = document.getElementById("stat-active");
+    const statStaff = document.getElementById("stat-staff");
+    const statSuperuser = document.getElementById("stat-superuser");
+    let canManageUsers = false;
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return "";
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function showStatus(message, type = "") {
+      statusBox.textContent = message;
+      statusBox.className = "status-box" + (type ? ` ${type}` : "");
+      statusBox.hidden = false;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function buildPermissionBadges(user) {
+      const badges = [];
+      badges.push(user.is_active ? '<span class="type-pill">Ativo</span>' : '<span class="type-pill danger">Inativo</span>');
+      if (user.is_staff) badges.push('<span class="type-pill">Staff</span>');
+      if (user.is_superuser) badges.push('<span class="type-pill warning">Superuser</span>');
+      return badges.join("");
+    }
+
+    function actionButton(label, action, style, userId) {
+      return `<button class="action-btn ${style}" data-action="${action}" data-user-id="${userId}" type="button">${label}</button>`;
+    }
+
+    function buildActions(user) {
+      if (!canManageUsers) {
+        return '<span class="muted">Somente superusuarios podem alterar permissoes.</span>';
+      }
+
+      const actions = [];
+      actions.push(
+        user.is_active
+          ? actionButton("Desativar", "deactivate", "danger", user.id)
+          : actionButton("Ativar", "activate", "primary", user.id)
+      );
+      actions.push(
+        user.is_staff
+          ? actionButton("Remover staff", "remove_staff", "warning", user.id)
+          : actionButton("Tornar staff", "make_staff", "primary", user.id)
+      );
+      actions.push(
+        user.is_superuser
+          ? actionButton("Remover superuser", "remove_superuser", "warning", user.id)
+          : actionButton("Tornar superuser", "make_superuser", "primary", user.id)
+      );
+      return `<div class="actions">${actions.join("")}</div>`;
+    }
+
+    function renderUsers(data) {
+      canManageUsers = Boolean(data.can_manage_users);
+      currentUser.textContent = `Logado como ${data.current_user}`;
+      statTotal.textContent = data.stats.total_usuarios;
+      statActive.textContent = data.stats.usuarios_ativos;
+      statStaff.textContent = data.stats.usuarios_staff;
+      statSuperuser.textContent = data.stats.usuarios_superuser;
+
+      if (!data.usuarios.length) {
+        usersTableBody.innerHTML = '<tr><td class="empty-row" colspan="6">Nenhum usuario encontrado.</td></tr>';
+        return;
+      }
+
+      usersTableBody.innerHTML = data.usuarios.map((user) => `
+        <tr>
+          <td><strong>${escapeHtml(user.username)}</strong><br /><span class="muted">ID ${escapeHtml(user.id)}</span></td>
+          <td>${escapeHtml(user.full_name)}</td>
+          <td class="muted">${escapeHtml(user.email)}</td>
+          <td>${buildPermissionBadges(user)}</td>
+          <td class="muted">${escapeHtml(user.last_login)}</td>
+          <td>${buildActions(user)}</td>
+        </tr>
+      `).join("");
+    }
+
+    async function loadUsers() {
+      try {
+        const response = await fetch("/painel-admin/usuarios/dados/");
+        const data = await response.json();
+        renderUsers(data);
+      } catch (error) {
+        usersTableBody.innerHTML = '<tr><td class="empty-row" colspan="6">Nao foi possivel carregar os usuarios.</td></tr>';
+        showStatus("Nao foi possivel carregar os dados do painel.", "danger");
+      }
+    }
+
+    async function updateUser(userId, action) {
+      const formData = new FormData();
+      formData.append("user_id", userId);
+      formData.append("action", action);
+
+      try {
+        const response = await fetch("/painel-admin/usuarios/acao/", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": getCookie("csrftoken")
+          }
+        });
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+          showStatus(data.message || "Nao foi possivel atualizar o usuario.", "warning");
+          return;
+        }
+
+        showStatus(data.message);
+        loadUsers();
+      } catch (error) {
+        showStatus("Ocorreu um erro ao atualizar o usuario.", "danger");
+      }
+    }
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-action]");
+      if (!button) return;
+      updateUser(button.dataset.userId, button.dataset.action);
+    });
+
+    loadUsers();
+  </script>
+</body>
+</html>

@@ -125,19 +125,42 @@
     }
 
     .nav-menu a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       text-decoration: none;
       color: var(--muted);
       font-size: 0.95rem;
       padding: 0.7rem 1rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-menu a::after {
+      content: "";
+      position: absolute;
+      left: 1rem;
+      right: 1rem;
+      bottom: 0.35rem;
+      height: 2px;
       border-radius: 999px;
-      transition: 0.2s ease;
+      background: linear-gradient(90deg, rgba(84, 217, 110, 0), rgba(84, 217, 110, 0.95), rgba(84, 217, 110, 0));
+      box-shadow: 0 0 12px rgba(84, 217, 110, 0.65);
+      transform: scaleX(0.2);
+      opacity: 0;
+      transition: transform 0.22s ease, opacity 0.22s ease;
     }
 
     .nav-menu a:hover,
     .nav-menu a:focus-visible {
       color: var(--text);
-      background: rgba(255, 255, 255, 0.06);
       outline: none;
+    }
+
+    .nav-menu a:hover::after,
+    .nav-menu a:focus-visible::after {
+      transform: scaleX(1);
+      opacity: 1;
     }
 
     .nav-action {

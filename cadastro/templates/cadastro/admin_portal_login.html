@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Admin | DumbFit</title>
+  <style>
+    :root {
+      --bg-top: #123f22;
+      --bg-bottom: #041108;
+      --surface: rgba(8, 22, 13, 0.9);
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f4f8f4;
+      --muted: #afbeaf;
+      --accent: #54d96e;
+      --accent-strong: #1fd457;
+      --error-bg: rgba(255, 89, 89, 0.12);
+      --error-border: rgba(255, 132, 132, 0.28);
+      --shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(84, 217, 110, 0.18), transparent 26%),
+        linear-gradient(180deg, var(--bg-top) 0%, #071b0e 40%, var(--bg-bottom) 100%);
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+    }
+
+    .card {
+      width: min(100%, 460px);
+      padding: 2rem;
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 0.8rem;
+      color: #9ef4b0;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.8rem;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.4rem;
+    }
+
+    .error-box {
+      margin-bottom: 1rem;
+      padding: 0.9rem 1rem;
+      border-radius: 16px;
+      border: 1px solid var(--error-border);
+      background: var(--error-bg);
+      color: #ffd6d6;
+    }
+
+    .error-box[hidden] {
+      display: none;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 0.45rem;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-size: 0.92rem;
+      color: #d8e8da;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      padding: 0.95rem 1rem;
+      font-size: 0.95rem;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: rgba(84, 217, 110, 0.58);
+      box-shadow: 0 0 0 3px rgba(84, 217, 110, 0.12);
+    }
+
+    .submit-btn,
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      color: #05260b;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 14px 30px rgba(31, 212, 87, 0.22);
+      margin-top: 0.4rem;
+    }
+
+    .back-link {
+      width: 100%;
+      margin-top: 0.9rem;
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <span class="eyebrow">Admin Django</span>
+    <h1>Painel administrativo</h1>
+    <p>Entre com uma conta autenticada do Django que possua permiss&atilde;o de equipe (`staff`) para gerenciar usu&aacute;rios e dados do sistema.</p>
+
+    <div class="error-box" id="admin-error" hidden></div>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="next" id="admin-next" value="" />
+      <div class="form-group">
+        <label for="id_username">Usu&aacute;rio</label>
+        <input id="id_username" name="username" type="text" autocomplete="username" required />
+      </div>
+      <div class="form-group">
+        <label for="id_password">Senha</label>
+        <input id="id_password" name="password" type="password" autocomplete="current-password" required />
+      </div>
+      <button class="submit-btn" type="submit">Entrar no admin</button>
+    </form>
+
+    <a class="back-link" href="/">Voltar ao site</a>
+  </main>
+
+  <script>
+    const adminError = document.getElementById("admin-error");
+    const adminNext = document.getElementById("admin-next");
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get("status");
+    const next = params.get("next");
+
+    if (next) {
+      adminNext.value = next;
+    }
+
+    if (status === "invalid") {
+      adminError.textContent = "Usuario ou senha invalidos.";
+      adminError.hidden = false;
+    } else if (status === "forbidden") {
+      adminError.textContent = "Sua conta nao possui permissao administrativa.";
+      adminError.hidden = false;
+    }
+  </script>
+</body>
+</html>
